@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Widget | Springfield Auto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #14395d, #49c6d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        h1 {
+            color: #14395d;
+            font-size: 28px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1 i {
+            color: #49c6d6;
+        }
+
+        .subtitle {
+            color: #49c6d6;
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cookie-demo {
+            background: linear-gradient(135deg, #f5f5f5, #ffffff);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #49c6d6;
+        }
+
+        .cookie-demo h2 {
+            color: #14395d;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .cookie-icon {
+            font-size: 60px;
+            color: #49c6d6;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .demo-btn.accept {
+            background: linear-gradient(135deg, #14395d, #49c6d6);
+            color: white;
+        }
+
+        .demo-btn.accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 57, 93, 0.3);
+        }
+
+        .demo-btn.settings {
+            background: white;
+            color: #14395d;
+            border: 2px solid #49c6d6;
+        }
+
+        .demo-btn.settings:hover {
+            background: #49c6d6;
+            color: white;
+        }
+
+        /* Gear Button */
+        #secret-gear {
+            margin-top: 30px;
+        }
+
+        #gear-btn {
+            background: linear-gradient(135deg, #14395d, #49c6d6);
+            border: none;
+            font-size: 40px;
+            cursor: pointer;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        #gear-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 10px 30px rgba(73, 198, 214, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(20, 57, 93, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff, #f5f5f5);
+            border-radius: 20px;
+            padding: 35px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 3px solid #49c6d6;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            color: #14395d;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h2 i {
+            color: #49c6d6;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #14395d;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+            color: #49c6d6;
+        }
+
+        .widget-code {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed #49c6d6;
+            position: relative;
+        }
+
+        .code-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #14395d;
+            word-break: break-all;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #49c6d6;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #14395d, #49c6d6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(73, 198, 214, 0.4);
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+        }
+
+        .instruction {
+            color: #666;
+            font-size: 14px;
+            margin: 15px 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+        }
+
+        /* Password Input Modal */
+        .password-modal-content {
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #49c6d6;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #14395d;
+            box-shadow: 0 0 0 3px rgba(73, 198, 214, 0.3);
+        }
+
+        .password-submit {
+            background: linear-gradient(135deg, #14395d, #49c6d6);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(73, 198, 214, 0.4);
+        }
+
+        .error-msg {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fas fa-cookie-bite"></i>
+            Cookie Widget Demo
+            <i class="fas fa-cookie-bite"></i>
+        </h1>
+        <div class="subtitle">Springfield Auto - Cookie Compliance Solution</div>
+
+        <!-- Cookie Widget Demo -->
+        <div class="cookie-demo">
+            <div class="cookie-icon">
+                <i class="fas fa-cookie"></i>
+            </div>
+            <h2>See It In Action!</h2>
+            <p style="color: #666; margin-bottom: 20px;">Click the buttons below to see how the cookie banner works</p>
+            <div class="demo-buttons">
+                <button class="demo-btn accept" onclick="alert('🍪 Cookie banner would appear here!')">Show Cookie Banner</button>
+                <button class="demo-btn settings" onclick="alert('⚙️ Cookie settings would open here!')">Cookie Settings</button>
+            </div>
+        </div>
+
+        <!-- Secret Gear Button (7 clicks to open) -->
+        <div id="secret-gear">
+            <button id="gear-btn" title="Click me 7 times for secret access">
+                ⚙️
+            </button>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-cookie"></i> Click the gear 7 times for developer access
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content password-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-lock"></i> Enter Password</h2>
+                <button class="close-btn" id="closePasswordModal">&times;</button>
+            </div>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Enter password" autocomplete="off">
+            <button class="password-submit" id="submitPassword">Unlock Widget</button>
+            <div class="error-msg" id="passwordError">❌ Wrong password</div>
+        </div>
+    </div>
+
+    <!-- Widget Code Modal -->
+    <div class="modal" id="widgetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-code"></i> Widget Embed Code</h2>
+                <button class="close-btn" id="closeWidgetModal">&times;</button>
+            </div>
+            
+            <div class="instruction">
+                Copy this code and paste it into your website to add the Cookie Widget:
+            </div>
+            
+            <div class="widget-code">
+                <div class="code-text" id="widgetCode">
+                    &lt;script src="https://taniad2169.github.io/Cook_Widge/widget.js"&gt;&lt;/script&gt;
+                </div>
+            </div>
+
+            <button class="copy-btn" id="copyWidgetBtn">
+                <i class="fas fa-copy"></i> Copy Widget Code
+            </button>
+
+            <div style="margin-top: 20px; font-size: 13px; color: #666;">
+                <i class="fas fa-info-circle"></i> 
+                Add this to your website's &lt;head&gt; or before the closing &lt;body&gt; tag
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load the cookie widget script
+        function loadCookieWidget() {
+            const script = document.createElement('script');
+            script.src = 'https://taniad2169.github.io/Cook_Widge/widget.js';
+            document.head.appendChild(script);
+            console.log('🍪 Cookie widget loaded!');
+        }
+
+        // Load widget on page load
+        window.addEventListener('load', loadCookieWidget);
+
+        // Gear click counter (no visible countdown)
+        let gearClickCount = 0;
+        let gearTimer = null;
+
+        const gearBtn = document.getElementById('gear-btn');
+        const passwordModal = document.getElementById('passwordModal');
+        const widgetModal = document.getElementById('widgetModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const submitPassword = document.getElementById('submitPassword');
+        const passwordError = document.getElementById('passwordError');
+        const closePasswordModal = document.getElementById('closePasswordModal');
+        const closeWidgetModal = document.getElementById('closeWidgetModal');
+        const copyWidgetBtn = document.getElementById('copyWidgetBtn');
+        const widgetCode = document.getElementById('widgetCode').textContent;
+
+        // Gear click handler - 7 clicks to open password modal
+        gearBtn.addEventListener('click', function() {
+            gearClickCount++;
+            
+            // Reset timer after each click
+            if (gearTimer) clearTimeout(gearTimer);
+            gearTimer = setTimeout(() => {
+                gearClickCount = 0;
+            }, 2000);
+
+            // When 7 clicks reached
+            if (gearClickCount === 7) {
+                gearClickCount = 0; // Reset counter
+                passwordModal.classList.add('active');
+                passwordInput.value = '';
+                passwordError.style.display = 'none';
+            }
+        });
+
+        // Submit password
+        submitPassword.addEventListener('click', function() {
+            const password = passwordInput.value;
+            
+            if (password === '333') {
+                passwordModal.classList.remove('active');
+                widgetModal.classList.add('active');
+                passwordInput.value = '';
+                passwordError.style.display = 'none';
+            } else {
+                passwordError.style.display = 'block';
+            }
+        });
+
+        // Enter key in password input
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitPassword.click();
+            }
+        });
+
+        // Close password modal
+        closePasswordModal.addEventListener('click', function() {
+            passwordModal.classList.remove('active');
+            passwordInput.value = '';
+            passwordError.style.display = 'none';
+        });
+
+        // Close widget modal
+        closeWidgetModal.addEventListener('click', function() {
+            widgetModal.classList.remove('active');
+        });
+
+        // Close modals when clicking outside
+        passwordModal.addEventListener('click', function(e) {
+            if (e.target === passwordModal) {
+                passwordModal.classList.remove('active');
+                passwordInput.value = '';
+                passwordError.style.display = 'none';
+            }
+        });
+
+        widgetModal.addEventListener('click', function(e) {
+            if (e.target === widgetModal) {
+                widgetModal.classList.remove('active');
+            }
+        });
+
+        // Copy widget code to clipboard
+        copyWidgetBtn.addEventListener('click', function() {
+            const textarea = document.createElement('textarea');
+            textarea.value = widgetCode;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                
+                // Visual feedback
+                const originalText = copyWidgetBtn.innerHTML;
+                copyWidgetBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyWidgetBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyWidgetBtn.innerHTML = originalText;
+                    copyWidgetBtn.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                alert('❌ Could not copy. Please copy manually:\n\n' + widgetCode);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        });
+    </script>
+</body>
+</html>
